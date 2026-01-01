@@ -330,6 +330,92 @@
             color: var(--accent-yellow);
             border-bottom: 2px solid var(--accent-yellow);
         }
+
+        /* --- Lightbox / Modal --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            cursor: zoom-out;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            max-width: 95%;
+            max-height: 95%;
+            object-fit: contain;
+            border-radius: 4px;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #fff;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1001;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .header .subtitle {
+                font-size: 18px;
+            }
+
+            .event-title {
+                font-size: 16px;
+            }
+
+            .date-sticker {
+                font-size: 12px;
+            }
+
+            .total-sticker {
+                font-size: 32px;
+            }
+
+            .city-marker {
+                font-size: 60px;
+            }
+
+            .container {
+                padding-bottom: 60px;
+            }
+        }
     </style>
 </head>
 
@@ -732,6 +818,44 @@
         </div>
     </div>
 
+    <!-- Lightbox Modal -->
+    <div id="imageModal" class="modal" onclick="closeLightbox()">
+        <span class="close-modal">&times;</span>
+        <img class="modal-content" id="imgFull">
+    </div>
+
+    <script>
+        function openLightbox(src) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('imgFull');
+            modal.style.display = "flex";
+            setTimeout(() => modal.classList.add('active'), 10);
+            modalImg.src = src;
+            document.body.style.overflow = 'hidden'; // Prevent scrolling
+        }
+
+        function closeLightbox() {
+            const modal = document.getElementById('imageModal');
+            modal.classList.remove('active');
+            setTimeout(() => {
+                modal.style.display = "none";
+                document.body.style.overflow = 'auto';
+            }, 300);
+        }
+
+        // Add click events to all images
+        document.querySelectorAll('.photo-slot img').forEach(img => {
+            img.onclick = function (e) {
+                e.stopPropagation();
+                openLightbox(this.src);
+            }
+        });
+
+        // Close on Esc key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+    </script>
 </body>
 
 </html>
