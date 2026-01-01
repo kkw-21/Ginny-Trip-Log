@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shanghai 2025 Travel Log</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Outfit:wght@300;400;600;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #1a1f2c;
+            /* Deep Slate - like the reference bg */
+            --line-color: #4a5b75;
+            --card-bg: #252b3b;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --accent-yellow: #f1c40f;
+            /* Handwritten notes */
+            --accent-pink: #ff7675;
+            /* Stamps */
+            --photo-placeholder: #12151e;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            background-image: radial-gradient(#2c3e50 1px, transparent 1px);
+            background-size: 20px 20px;
+            /* Subtle grid pattern */
+        }
+
+        /* Handwritten elements class */
+        .handwritten {
+            font-family: 'Caveat', cursive;
+            color: var(--accent-yellow);
+        }
+
+        .container {
+            max-width: 800px;
+            /* Increased for larger images */
+            margin: 0 auto;
+            position: relative;
+            padding-bottom: 100px;
+        }
+
+        /* --- Hero Header --- */
+        .header {
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 2px dashed var(--line-color);
+            background: linear-gradient(to bottom, #1a1f2c, #1f2533);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .header .subtitle {
+            font-family: 'Caveat', cursive;
+            font-size: 24px;
+            color: var(--text-muted);
+            margin-top: 10px;
+            transform: rotate(-2deg);
+            display: inline-block;
+        }
+
+        /* --- Timeline Spine --- */
+        .timeline-wrapper {
+            position: relative;
+            padding: 20px 20px 0 20px;
+        }
+
+        /* The vertical line */
+        .timeline-line {
+            position: absolute;
+            left: 35px;
+            /* Axis position */
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--line-color);
+            z-index: 0;
+        }
+
+        /* --- Date Headers --- */
+        .date-block {
+            position: relative;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            z-index: 1;
+        }
+
+        .date-sticker {
+            background: var(--accent-yellow);
+            color: #1a1f2c;
+            padding: 5px 15px;
+            border-radius: 4px;
+            font-weight: 800;
+            font-size: 14px;
+            display: inline-block;
+            transform: rotate(-1deg);
+            box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
+            margin-left: 15px;
+            /* Align near line */
+            text-transform: uppercase;
+        }
+
+        .date-day {
+            font-family: 'Caveat', cursive;
+            font-size: 22px;
+            margin-left: 10px;
+            color: #fff;
+        }
+
+        /* --- Event Nodes --- */
+        .event {
+            position: relative;
+            margin-left: 35px;
+            /* Offset for line */
+            padding-left: 25px;
+            padding-bottom: 40px;
+        }
+
+        /* Dot on the line */
+        .event::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 5px;
+            width: 14px;
+            height: 14px;
+            background: var(--bg-color);
+            border: 3px solid var(--text-muted);
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        .event-time {
+            font-family: 'Caveat', cursive;
+            font-size: 18px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .event-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .event-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .event-location {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent-pink);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .event-desc {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #bdc3c7;
+            margin-bottom: 12px;
+        }
+
+        .price-tag {
+            display: inline-block;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #a8b2c1;
+        }
+
+        /* City Labels and Markers */
+        .event-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .city-label {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: var(--accent-pink);
+            opacity: 0.8;
+            text-align: right;
+            line-height: 1.2;
+            z-index: 5;
+            background: rgba(37, 43, 59, 0.8);
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        .city-marker {
+            position: absolute;
+            bottom: -20px;
+            right: -10px;
+            font-size: 80px;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.03);
+            pointer-events: none;
+            user-select: none;
+            z-index: 1;
+            text-transform: uppercase;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* --- THE PHOTO SLOT --- */
+        .photo-slot {
+            margin-top: 15px;
+            width: 100%;
+            /* Removed fixed height for flexibility */
+            background-color: var(--photo-placeholder);
+            border: 2px dashed #3d4a5d;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: #4a5b75;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            min-height: 100px;
+        }
+
+        .photo-slot.has-image {
+            border: none;
+            background: none;
+        }
+
+        .photo-slot img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .photo-slot:hover {
+            border-color: var(--accent-yellow);
+            color: var(--accent-yellow);
+            cursor: pointer;
+        }
+
+        .photo-slot i {
+            font-size: 24px;
+            margin-bottom: 5px;
+            font-style: normal;
+        }
+
+        .photo-label {
+            font-family: 'Caveat', cursive;
+            font-size: 18px;
+        }
+
+        /* Special Types */
+        .incident-card {
+            border-left: 3px solid #e74c3c;
+            background: rgba(231, 76, 60, 0.1);
+        }
+
+        .hosted-event {
+            border: 1px solid var(--accent-yellow);
+        }
+
+        .hosted-badge {
+            background: var(--accent-yellow);
+            color: #000;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 2px;
+            vertical-align: middle;
+            margin-left: 8px;
+            text-transform: uppercase;
+        }
+
+        /* --- Footer --- */
+        .footer {
+            margin-top: 60px;
+            text-align: center;
+            border-top: 2px dashed var(--line-color);
+            padding-top: 30px;
+        }
+
+        .total-sticker {
+            font-family: 'Caveat', cursive;
+            font-size: 40px;
+            color: #fff;
+            transform: rotate(-5deg);
+            display: inline-block;
+        }
+
+        .total-amount {
+            color: var(--accent-yellow);
+            border-bottom: 2px solid var(--accent-yellow);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>Shanghai Log</h1>
+            <div class="subtitle">The Golden Trio • Nov-Dec 2025</div>
+        </div>
+
+        <div class="timeline-wrapper">
+            <div class="timeline-line"></div>
+
+            <!-- MONDAY NOV 24 -->
+            <div class="date-block">
+                <span class="date-sticker">NOV 24</span>
+                <span class="date-day">Monday</span>
+            </div>
+
+            <div class="event">
+                <span class="event-time">Evening</span>
+                <div class="event-card">
+                    <div class="city-label">SHANGHAI<br>上海</div>
+                    <div class="city-marker">SH</div>
+                    <div class="event-title">丰盛胡同 (七宝万科店)</div>
+                    <span class="event-location">Fengsheng Hutong · Qibao</span>
+                    <div class="event-desc">
+                        Famous for Peking Duck and traditional Beijing cuisine. Located in Qibao Vanke Square.
+                    </div>
+                    <div class="price-tag">$12.43</div>
+                    <!-- PHOTO SLOT -->
+                    <div class="photo-slot has-image">
+                        <img src="images/fengshenhutong.png" alt="Peking Duck at Fengsheng Hutong">
+                    </div>
+                </div>
+            </div>
+
+            <!-- TUESDAY NOV 25 -->
+            <div class="date-block">
+                <span class="date-sticker">NOV 25</span>
+                <span class="date-day">Tuesday</span>
+            </div>
+
+            <div class="event">
+                <span class="event-time">Morning</span>
+                <div class="event-card">
+                    <div class="city-label">SHANGHAI<br>上海</div>
+                    <div class="city-marker">SH</div>
+                    <div class="event-title">龙美术馆 (西岸馆)</div>
+                    <span class="event-location">Long Museum West Bund</span>
+                    <div class="event-desc">Industrial architecture meeting art. Known for its unique "vault-umbrella"
+                        concrete structure.</div>
+                    <div class="price-tag">$28.57</div>
+                    <div class="photo-slot has-image">
+                        <img src="images/long.png" alt="Long Museum Facade">
+                    </div>
+                </div>
+            </div>
+
+            <div class="event">
+                <span class="event-time">Lunch</span>
+                <div class="event-card">
+                    <div class="city-label">SHANGHAI<br>上海</div>
+                    <div class="city-marker">SH</div>
+                    <div class="event-title">西岸艺术区咖啡馆</div>
+                    <span class="event-location">Café at West Bund Area</span>
+                    <div class="event-desc">Coffee break + Lunch near the museum area.</div>
+                    <div class="price-tag">$21.57</div>
+                    <div class="photo-slot has-image">
+                        <img src="images/westbundcafe.png" alt="Coffee by the river">
+                    </div>
+                </div>
+            </div>
+
+            <div class="event">
+                <span class="event-time">Dinner</span>
+                <div class="event-card">
+                    <div class="city-label">SHANGHAI<br>上海</div>
+                    <div class="city-marker">SH</div>
+                    <div class="event-title">逸品淮扬 (白玉兰广场店)</div>
+                    <span class="event-location">Yipin Huaiyang @ Sinar Mas Plaza</span>
+                    <div class="event-desc">High-end Huaiyang cuisine in North Bund (White Magnolia Plaza).</div>
+                    <div class="price-tag">$20.00</div>
+                    <div class="photo-slot has-image">
+                        <img src="images/yipinhuaiyang.png" alt="The Dinner Spread">
+                    </div>
+                </div>
+            </div>
+
+            <div class="event">
+                <span class="event-time">Night</span>
+                <div class="event-card">
+                    <div class="city-label">SHANGHAI<br>上海</div>
+                    <div class="city-marker">SH</div>
+                    <div class="event-title">上海外滩茂悦大酒店</div>
+                    <span class="event-location">Hyatt on the Bund · 199 Huangpu Rd</span>
+                    <div class="event-desc">Known for spectacular views of the Bund and Pudong skyline.</div>
+                    <div class="price-tag">$211.86</div>
+                    <div class="photo-slot has-image">
+                        <img src="images/Hyatt on the Bundthebundhotel.png" alt="View from Hyatt Room">
+                    </div>
+                </div>
+            </div>
+
+            <!-- WEDNESDAY NOV 26 -->
+            <div class="date-block">
+                <span class="date-sticker">NOV 26</span>
+                <span class="date-day">Wednesday</span>
+            </div>
+
+            <div class="event">
+                <span class="event-time">Daytime</span>
+                <div class="event-card">
+                    <div class="city-label">SHANGHAI<br>上海</div>
+                    <div class="city-marker">SH</div>
+                    <div class="event-title">上海博物馆</div>
+                    <span class="event-location">Shanghai Museum · People's Square</span>
+                    <div class="event-desc">World-renowned museum of ancient Chinese art. Rental for English/Chinese
+                        guide.</div>
+                    <div class="price-tag">$5.71</div>
+                    <div class="photo-slot has-image">
+                        <img src="images/shanghaimuseum.png" alt="Shanghai Museum Bronze Gallery">
+                    </div>
+                </div>
+            </div>
+
+            <div class="event">
+                <span class="event-time">Dinner</span>
+                <div class="event-card">
+                    <div class="city-label">SHANGHAI<br>上海</div>
+                    <div class="city-marker">SH</div>
+                    <div class="event-title">桂满陇 (江南菜)</div>
+                    <span class="event-location">Gui Man Long · Hangzhou Style</span>
+                    <div class="event-desc">Popular restaurant chain known for traditional decor and Jiangnan cuisine.
+                    </div>
+                    <div class="price-tag">$11.43</div>
+                    <div class="photo-slot has-image">
+                        <img src="images/guimanlong.png" alt="Gui Man Long Hangzhou Style Dinner">
+                    </div>
+                </div>
+            </div>
+
+            <!-- THURSDAY NOV 27 -->
+            <div class="date-block">
+                <span class="date-sticker">NOV 27</span>
+                <span class="date-day">Thursday</span>
+            </div>
+
+            <div class="event">
+                <span class="event-time">All Day</span>
+                <div class="event-card">
+                    <div class="city-label">SUZHOU<br>苏州</div>
+                    <div class="city-marker">SZ</div>
+                    <div class="event-title">苏州博物馆 & 平江路</div>
+                    <span class="event-location">Suzhou Museum & Pingjiang Rd</span>
+                    <div class="event-desc">Designed by I.M. Pei. A masterpiece of modern architecture and traditional
+                        gardens.</div>
+                    <div class="price-tag">$55.57 (Total)</div>
+                    <div class="photo-slot has-image">
+                        <img src="images/suzhoumusuem.png" alt="Suzhou Museum">
+                    </div>
+                    <div style="margin-top:10px;"></div>
+                    <div class="photo-slot has-image">
+                        <img src="images/thebundnight2.png" alt="Suzhou Canal / The Bund Night">
+                    </div>
+                </div>
+            </div>
+
+            <!-- FRIDAY NOV 28 -->
+            <div class="date-block">
+                <span class="date-sticker">NOV 28</span>
+                <span class="date-day">Friday</span>
+            </div>
+
+            <div class="event">
+                <span class="event-time">PM</span>
+                <div class="event-card">
+                    <div class="city-label">SONGJIANG<br>松江</div>
+                    <div class="city-marker">SJ</div>
+                    <div class="event-title">广富林文化遗址</div>
+                    <span class="event-location">Guangfulin Relics Park</span>
+                    <div class="event-desc">Archaeological site known as the "Root of Shanghai". Water-based
+                        architecture.</div>
+                    <div class="price-tag">$25.71</div>
+                    <div class="photo-slot has-image">
+                        <img src="images/guangfulin.png" alt="Guangfulin Relics Park">
+                    </div>
+                    <div style="margin-top:10px;"></div>
+                    <div class="photo-slot has-image">
+                        <img src="images/concert.png" alt="Concert at Guangfulin">
+                    </div>
+                </div>
+            </div>
+
+            <div class="event">
+                <span class="event-time">Note</span>
+                <div class="event-card incident-card">
+                    <div class="city-label">SONGJIANG<br>松江</div>
+                    <div class="city-marker">SJ</div>
+                    <div class="event-title">车辆碰瓷理赔</div>
+                    <span class="event-location">Traffic Incident · Settlement</span>
+                    <div class="event-desc handwritten" style="font-size:18px; color: #ff7675;">
+                        Settled the "Pengci" (staged accident) car door dispute.
+                    </div>
+                    <div class="price-tag">$42.86</div>
+                </div>
+            </div>
+
+            <div class="event">
+                <span class="event-time">Dinner</span>
+                <div class="event-card">
+                    <div class="city-label">SONGJIANG<br>松江</div>
+                    <div class="city-marker">SJ</div>
+                    <div class="event-title">上海宰相府酒店·怡园</div>
+                    <span class="event-location">Yiyuan Restaurant @ Prime Hotel</span>
+                    <div class="event-desc">Fine dining located inside the Guangfulin Prime Hotel complex.</div>
+                    <div class="price-tag">$17.14</div>
+                    <div class="photo-slot has-image">
+                        <img src="images/yiyuanzaixiangfu.png" alt="Dinner at Yiyuan Restaurant">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SATURDAY NOV 29 -->
+            <div class="date-block">
+                <span class="date-sticker">NOV 29</span>
+                <span class="date-day">Saturday</span>
+            </div>
+
+            <div class="event">
+                <span class="event-time">Travel</span>
+                <div class="event-card">
+                    <div class="city-label">NANJING<br>南京</div>
+                    <div class="city-marker">NJ</div>
+                    <div class="event-title">前往南京</div>
+                    <span class="event-location">Shanghai Hongqiao to Nanjing South</span>
+                    <div class="event-desc">High-Speed Rail (First Class). A smooth 1.5-hour journey.</div>
+                    <div class="price-tag">$35.29</div>
+                    <div class="photo-slot has-image">
+                        <img src="images/hsr-nanjing.png" alt="HSR First Class to Nanjing">
+                    </div>
+                </div>
+            </div>
+
+            <div class="event">
+                <span class="event-time">Afternoon</span>
+                <div class="event-card">
+                    <div class="city-label">NANJING<br>南京</div>
+                    <div class="city-marker">NJ</div>
+                    <div class="event-title">南京博物院</div>
+                    <span class="event-location">Nanjing Museum</span>
+                    <div class="event-desc">One of the largest museums in China. Features a famous Republic of China Era
+                        street reconstruction.</div>
+                    <div class="price-tag">$8.57</div>
+                    <div class="photo-slot has-image">
+                        <img src="images/najingmusuem.png" alt="Nanjing Museum Old Street">
+                    </div>
+                </div>
+            </div>
+
+            <div class="event">
+                <span class="event-time">Night</span>
+                <div class="event-card">
+                    <div class="city-label">NANJING<br>南京</div>
+                    <div class="city-marker">NJ</div>
+                    <div class="event-title">南京洲际酒店</div>
+                    <span class="event-location">InterContinental Nanjing</span>
+                    <div class="event-desc">Located in the Zifeng Tower, the tallest building in Nanjing. Stunning city
+                        views.</div>
+                    <div class="price-tag">$85.71</div>
+                    <div class="photo-slot has-image">
+                        <img src="images/nanjing-intercontinental.png" alt="Night View from Nanjing InterContinental">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUNDAY NOV 30 -->
+            <div class="date-block">
+                <span class="date-sticker">NOV 30</span>
+                <span class="date-day">Sunday</span>
+            </div>
+
+            <div class="event">
+                <span class="event-time">Morning</span>
+                <div class="event-card">
+                    <div class="city-label">NANJING<br>南京</div>
+                    <div class="city-marker">NJ</div>
+                    <div class="event-title">牛首山文化旅游区·佛顶宫</div>
+                    <span class="event-location">Niushoushan · Usnisa Palace</span>
+                    <div class="event-desc">World-famous for the stunning underground palace housing Buddhist relics.
+                    </div>
+                    <div class="price-tag">$71.43</div>
+                    <div class="photo-slot has-image">
+                        <img src="images/niushoushan.png" alt="Niushoushan Dome">
+                    </div>
+                    <div style="margin-top:10px;"></div>
+                    <div class="photo-slot has-image">
+                        <img src="images/niushoushan2.png" alt="Niushoushan Corridor">
+                    </div>
+                    <div style="margin-top:10px;"></div>
+                    <div class="photo-slot has-image">
+                        <img src="images/budha-nanjing.png" alt="Usnisa Palace Buddha">
+                    </div>
+                </div>
+            </div>
+
+            <div class="event">
+                <span class="event-time">Dinner</span>
+                <div class="event-card hosted-event">
+                    <div class="city-label">SONGJIANG<br>松江</div>
+                    <div class="city-marker">SJ</div>
+                    <div class="event-title">兴隆烤鸭 (馨厨) <span class="hosted-badge">Hosted</span></div>
+                    <div class="event-desc handwritten">
+                        Dinner hosted by Siqi & Zuhui. A lovely reunion!
+                    </div>
+                    <div class="price-tag">$0.00</div>
+                    <div class="photo-slot has-image">
+                        <img src="images/xingchuroastduck.png" alt="Xingchu Roast Duck Reunion">
+                    </div>
+                </div>
+            </div>
+
+            <!-- MONDAY DEC 1 -->
+            <div class="date-block">
+                <span class="date-sticker">DEC 01</span>
+                <span class="date-day">Monday</span>
+            </div>
+
+            <div class="event">
+                <span class="event-time">Shopping</span>
+                <div class="event-card">
+                    <div class="city-label">SONGJIANG<br>松江</div>
+                    <div class="city-marker">SJ</div>
+                    <div class="event-title">松江岳庙街</div>
+                    <span class="event-location">Songjiang Yuemiao Street</span>
+                    <div class="event-desc">Traditional market street. Jewelry haul: Silver bangles, Jade, Agate, and
+                        Amber.</div>
+                    <div class="price-tag">$140.00</div>
+                    <div class="photo-slot has-image">
+                        <img src="images/songjianglaojie.png" alt="Songjiang Old Street Jewelry">
+                    </div>
+                    <div style="margin-top:10px;"></div>
+                    <div class="photo-slot has-image">
+                        <img src="images/songjiang.png" alt="Songjiang View">
+                    </div>
+                    <div style="margin-top:10px;"></div>
+                    <div class="photo-slot has-image">
+                        <img src="images/songjiang2.png" alt="More Songjiang Photos">
+                    </div>
+                </div>
+            </div>
+
+            <div class="event">
+                <span class="event-time">Dinner</span>
+                <div class="event-card hosted-event">
+                    <div class="city-label">SONGJIANG<br>松江</div>
+                    <div class="city-marker">SJ</div>
+                    <div class="event-title">上海宰相府酒店·怡园 <span class="hosted-badge">Hosted</span></div>
+                    <div class="event-desc handwritten">
+                        Final farewell dinner at Prime Hotel.
+                    </div>
+                    <div class="price-tag">$0.00</div>
+                    <div class="photo-slot has-image">
+                        <img src="images/dinner-beer-nanjing.png" alt="Final Toast Photo">
+                    </div>
+                </div>
+            </div>
+
+            <!-- TUESDAY DEC 2 -->
+            <div class="date-block">
+                <span class="date-sticker">DEC 02</span>
+                <span class="date-day">Tuesday</span>
+            </div>
+
+            <div class="event">
+                <span class="event-time">Departure</span>
+                <div class="event-card">
+                    <div class="city-label">SHANGHAI<br>上海</div>
+                    <div class="city-marker">PVG</div>
+                    <div class="event-title">返程台北</div>
+                    <span class="event-location">PVG T1 · Pudong Airport</span>
+                    <div class="event-desc">Boarding flight back to Taipei. End of the 2024 trip.</div>
+                    <div class="photo-slot" style="height: 100px;">
+                        <i>✈️</i>
+                        <span class="photo-label">Airport Photo</span>
+                    </div>
+                </div>
+            </div>
+
+        </div> <!-- End Timeline -->
+
+        <div class="footer">
+            <div class="total-sticker">
+                Total: <span class="total-amount">$840.58</span>
+            </div>
+            <p class="handwritten" style="color: #94a3b8; margin-top: 10px; font-size: 20px;">
+                End of the journey.
+            </p>
+        </div>
+    </div>
+
+</body>
+
+</html>
